@@ -56,8 +56,6 @@ fn main() {
     //         u += 2_f64.powi(i as i32) * (get_nth_bit_from_decimal(l, 4 * N * A + i, Q_N) as f64);
     //     }
 
-    //     print(&p1);
-
     //     let z = 
     //         sum_all(&(-1 * matmul(&c, &p1, MatProp::TRANS, MatProp::NONE))).0
     //         + sum_all(&pow(&(&p1 - matmul(&pi1, &p1, MatProp::NONE, MatProp::NONE) - &x - &e - &s), &2.0, false)).0
@@ -67,11 +65,11 @@ fn main() {
     //     return z;
     // };
 
-    // let result = execute::execute(Q_N, objective_function);
+    // let result = execute(Q_N, objective_function);
 
     // print(&result);
 
-    const NUMS: [i32; 13] = [2, 3, 5, 7, 9, 10, 13, 21, 22, 24, 11, 12, 13];
+    const NUMS: [i32; 10] = [2, 3, 5, 7, 9, 10, 13, 21, 22, 24];
     let objective_function = | l: i32 | -> f64 {
         let mut sum = 0.0;
         for i in 0..NUMS.len() {
@@ -85,6 +83,6 @@ fn main() {
     };
 
     let result = execute(NUMS.len(), objective_function);
-    println!("Result: ");
-    print(&result);
+    // println!("Result: ");
+    // print(&result);
 }

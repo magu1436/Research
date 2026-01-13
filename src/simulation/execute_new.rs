@@ -1,21 +1,27 @@
 use arrayfire::*;
 use num_complex::Complex64;
+use std::time;
 
 use super::calculator::get_nth_bit_from_decimal;
 use super::environment::assert_backend_initialized;
+use super::writer::write_into_csv;
 
 pub fn execute<F>(bit_amount: usize, objective_function: F) -> Array<f64>
 where
     F: Fn(i32) -> f64,
 {
+    let start_time = time::Instant::now();
+    print!("\nExecuting quantum annealing simulation...\n");
+
     assert_backend_initialized();
 
     // 定数群
     // 後々, 引数で受け取る仕様に変更
-    let step: u32 = 1000;
-    let tau: f64 = 1.;
-    let dt: f64 = tau / (step as f64);
-    let b0: f64 = 30.0;
+    let dt: f64 = 1e-2;
+    let tau: f64 = 20.0;
+    let step: u32 = (tau / dt) as u32;
+    let b0: f64 = 10.0;
+    const PRINT_PER_STEP: u32 = 100;
 
     let pattern = 2_u64.pow(bit_amount as u32) as usize;
 
@@ -72,6 +78,15 @@ where
 
         let f = matmul(&t_comp, &f0, MatProp::NONE, MatProp::NONE);
         assign_seq(&mut f0, &[Seq::new(0, pattern as u32 - 1, 1)], &f);
+
+        if time % PRINT_PER_STEP == 0 {
+            print!(
+                "  Step: {}/{} ({:.2}%)\n",
+                time,
+                step,
+                (time as f64) / (step as f64) * 100.0
+            );
+        }
     }
 
     // 結果の変換
@@ -79,6 +94,14 @@ where
     f0 = (1.0 / nr) * f0;
     let amp = abs(&f0);
     let prob = mul(&amp, &amp, true);
+
+    let elapsed = start_time.elapsed();
+    print!(
+        "Quantum annealing simulation completed in {:.2?} seconds.\n",
+        elapsed
+    );
+
+    write_into_csv(&prob).expect("Failed to write results into CSV file.");
 
     return prob;
 
