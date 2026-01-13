@@ -17,7 +17,7 @@ where
 
     // 定数群
     // 後々, 引数で受け取る仕様に変更
-    let dt: f64 = 1e-4;
+    let dt: f64 = 1e-3;
     let tau: f64 = 20.0;
     let step: u32 = (tau / dt) as u32;
     let b0: f64 = 10.0;
@@ -44,13 +44,8 @@ where
     let mut io_vec = vec![vec![0; pattern]; pattern];
     for i in 0..pattern {
         for j in 0..pattern {
-            let mut k = 0;
-            for l in 0..bit_amount {
-                k += (2 * get_nth_bit_from_decimal(i as i32, l, bit_amount) - 1) *
-                     (2 * get_nth_bit_from_decimal(j as i32, l, bit_amount) - 1);
-                if k == (bit_amount - 2) as i32 {
-                    io_vec[i][j] = 1;
-                }
+            if (i ^ j).count_ones() == 1 {
+                io_vec[i][j] = 1;
             }
         }
     }
