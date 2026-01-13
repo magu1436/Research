@@ -71,7 +71,7 @@ fn main() {
 
     // print(&result);
 
-    const NUMS: [i32; 6] = [2, 3, 5, 7, 8, 9];
+    const NUMS: [i32; 13] = [2, 3, 5, 7, 9, 10, 13, 21, 22, 24, 11, 12, 13];
     let objective_function = | l: i32 | -> f64 {
         let mut sum = 0.0;
         for i in 0..NUMS.len() {

@@ -13,7 +13,7 @@ where
     // 定数群
     // 後々, 引数で受け取る仕様に変更
     let step: u32 = 1000;
-    let tau: f64 = 1.0;
+    let tau: f64 = 1.;
     let dt: f64 = tau / (step as f64);
     let b0: f64 = 30.0;
 
