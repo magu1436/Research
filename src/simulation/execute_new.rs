@@ -17,7 +17,7 @@ where
 
     // 定数群
     // 後々, 引数で受け取る仕様に変更
-    let dt: f64 = 1e-2;
+    let dt: f64 = 1e-4;
     let tau: f64 = 20.0;
     let step: u32 = (tau / dt) as u32;
     let b0: f64 = 10.0;
@@ -79,6 +79,10 @@ where
         let f = matmul(&t_comp, &f0, MatProp::NONE, MatProp::NONE);
         assign_seq(&mut f0, &[Seq::new(0, pattern as u32 - 1, 1)], &f);
 
+        // 正規化
+        let nr = norm(&f0, NormType::VECTOR_2, 2.0, 0.0);
+        f0 = (1.0 / nr) * f0;
+
         if time % PRINT_PER_STEP == 0 {
             print!(
                 "  Step: {}/{} ({:.2}%)\n",
@@ -90,8 +94,8 @@ where
     }
 
     // 結果の変換
-    let nr = norm(&f0, NormType::VECTOR_2, 2.0, 0.0);
-    f0 = (1.0 / nr) * f0;
+    // let nr = norm(&f0, NormType::VECTOR_2, 2.0, 0.0);
+    // f0 = (1.0 / nr) * f0;
     let amp = abs(&f0);
     let prob = mul(&amp, &amp, true);
 
